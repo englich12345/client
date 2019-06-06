@@ -1,0 +1,8 @@
+.pagination .page-item {
+  cursor: pointer;
+  user-select: none;
+}
+
+.pagination .page-link:focus {
+  box-shadow: none;
+}
