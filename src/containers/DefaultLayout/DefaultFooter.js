@@ -15,8 +15,8 @@ class DefaultFooter extends Component {
 
     return (
       <React.Fragment>
-        <span><a href="#">CoreUI react with redux-saga</a> &copy; 2018 Orient Software.</span>
-        <span className="ml-auto">Powered by <a href="#">Orient Software</a></span>
+        <span><span>CoreUI react with redux-saga</span> &copy; 2018 Orient Software.</span>
+        <span className="ml-auto">Powered by <span>Orient Software</span></span>
       </React.Fragment>
     );
   }

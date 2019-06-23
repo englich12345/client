@@ -20,7 +20,7 @@ class ReduxSaga extends Component {
   }
 
   render() {
-    const { fetching, fetched, fetchFailed, message, post } = this.props.demo;
+    const { fetching, fetched, post } = this.props.demo;
     return (
       <div className = "animated fadeIn" >
         {
