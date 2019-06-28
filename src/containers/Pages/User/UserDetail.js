@@ -76,7 +76,7 @@ class UserDetail extends Component {
     return (
       <div>
         <Modal isOpen={isOpen || false} toggle={toggle} className={this.props.className}>
-          <ModalHeader toggle={toggle}>{(userDetail === undefined) ? "Add" : "Update"} User</ModalHeader>
+          <ModalHeader toggle={toggle}>{(index === undefined) ? "Add" : "Update"} User</ModalHeader>
           <ModalBody>
             <div className="container-fluid">
               <div className="animated fadeIn">
@@ -138,7 +138,7 @@ class UserDetail extends Component {
             </div>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={() => this.onSave(index)}>{(userDetail === undefined) ? "Add" : "Update"}</Button>{' '}
+            <Button color="primary" onClick={() => this.onSave(index)}>{(index === null) ? "Add" : "Update"}</Button>{' '}
             <Button color="secondary" onClick={toggle}>Cancel</Button>
           </ModalFooter>
         </Modal>

@@ -7,6 +7,8 @@ import UserDetail from "./UserDetail";
 import userApi from "../../../api/userApi";
 import '../../../App.css'
 import Pagination from "../../components/Pagination/Pagination";
+import { toast } from "react-toastify";
+import {PAGINATION} from '../../../constant';
 class User extends Component {
   constructor(props) {
     super(props);
@@ -17,24 +19,16 @@ class User extends Component {
       idDelete: null,
       currentIndex: null
     }
-    this.tableSetting = {
-      limit: 3,
-      offset: 1,
-      selected: 0,
-      keyword: '',
-      sortName: '',
-      desc: false
-    }
   }
 
   componentDidMount() {
-    this.props.GetList(this.tableSetting);
+    this.props.GetList(PAGINATION);
   }
 
   selectPage = ({ selected }) => {
-    this.tableSetting.selected = selected || 0;
-    this.tableSetting.offset = Math.ceil(selected + 1);
-    this.props.GetList(this.tableSetting);
+    PAGINATION.selected = selected || 0;
+    PAGINATION.offset = Math.ceil(selected + 1);
+    this.props.GetList(PAGINATION);
   }
 
   changeSearch = (e) => {
@@ -65,20 +59,14 @@ class User extends Component {
 
   DeleteToggle(e, id) {
     this.setState({ modal: !this.state.modal, idDelete: id })
-    // let user = this.props.getArrUser.filter(x=>x.id == id);
-    // let index = this.props.getArrUser.indexOf(user);
-    // console.log(index)
 
   }
 
   DeleteUser = () => {
     let { idDelete } = this.state;
-    userApi.deleteUser(idDelete).then(response => {
-      let index = this.props.getArrUser.findIndex(x => x.id === idDelete)
-      if (index !== -1) {
-        this.props.getArrUser.splice(index, 1);
-        this.props.getUser(this.props.getArrUser);
-      }
+    userApi.RemoveUser(idDelete).then(response => {
+      this.props.GetList(PAGINATION);
+      toast.success("Remove user success!");
       this.DeleteToggle();
     })
   }
@@ -88,7 +76,7 @@ class User extends Component {
     let { listUser, totalPage } = this.props;
     const paginationSetting = {
       totalPage,
-      selected: this.tableSetting.selected
+      selected: PAGINATION.selected
     }
 
     return (

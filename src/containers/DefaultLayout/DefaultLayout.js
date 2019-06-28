@@ -1,7 +1,7 @@
 import React, { Component, Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { Container } from 'reactstrap';
-
+import { ToastContainer, toast } from 'react-toastify';
 import {
   AppAside,
   AppBreadcrumb,
@@ -41,6 +41,7 @@ class DefaultLayout extends Component {
           </Suspense>
         </AppHeader>
         <div className="app-body">
+        <ToastContainer autoClose={2000} position={toast.POSITION.TOP_RIGHT} />
           <AppSidebar fixed display="lg">
             <AppSidebarHeader />
             <AppSidebarForm />
