@@ -3,6 +3,8 @@ import { Button, Modal, ModalHeader, ModalFooter, ModalBody, Form, FormGroup, Ro
 import { connect } from "react-redux";
 import { USER } from '../../../redux/actions'
 import userApi from '../../../api/userApi'
+import { toast } from 'react-toastify';
+import { PAGINATION } from '../../../constant';
 class UserDetail extends Component {
   constructor(props) {
     super(props);
@@ -15,8 +17,8 @@ class UserDetail extends Component {
       fullName: "",
       avatar: "",
       phoneNumber: "",
-      roles: null,
-      status: null
+      roles: ["44a042b7-e016-4496-b5ec-4afb3d4517cf"],
+      status: false
     }
   }
   isOpenToggle = () => {
@@ -33,7 +35,7 @@ class UserDetail extends Component {
       avatar: "",
       phoneNumber: "",
       status: false,
-      roles: false
+      roles: [""]
     })
   }
 
@@ -44,10 +46,16 @@ class UserDetail extends Component {
   avatarChange = (e) => {
     this.setState({ avatar: e.target.files });
   }
+  changeStatus = () => {
+    this.setState({ status: !this.state.status })
+  }
+  changeRole = (e) => {
+    this.setState({ roles: e.target.value },()=>{
+      console.log("role",this.state.roles)
+    })
+  }
 
   onSave = (index) => {
-    let { sources } = this.props.listUser;
-    let id = sources[index];
     let params = Object.assign({}, {
       name: this.state.name,
       email: this.state.email,
@@ -56,18 +64,23 @@ class UserDetail extends Component {
       avatar: this.state.avatar,
       phoneNumber: this.state.phoneNumber,
       status: this.state.status,
-      roles: this.state.role,
+      roles: this.state.roles,
     })
-    if (index === undefined) {
-      userApi.postUser(params).then(response => {
-        this.props.getUser(response);
+    if (index === null) {
+      userApi.CreateUser(params).then(response => {
+        this.props.GetList(PAGINATION);
+        this.resetUser();
+        toast.success("Create user successfully!")
+        console.log("roles", this.state.roles)
+      }).catch(err => {
+        toast.error("Can't create User ")
       })
     }
-    else {
-      userApi.updateUser(id, params).then(response => {
+    // else {
+    //   userApi.updateUser(id, params).then(response => {
 
-      })
-    }
+    //   })
+    // }
     this.props.toggle();
   }
   render() {
@@ -76,7 +89,7 @@ class UserDetail extends Component {
     return (
       <div>
         <Modal isOpen={isOpen || false} toggle={toggle} className={this.props.className}>
-          <ModalHeader toggle={toggle}>{(index === undefined) ? "Add" : "Update"} User</ModalHeader>
+          <ModalHeader toggle={toggle}>{(index === null) ? "Add" : "Update"} User</ModalHeader>
           <ModalBody>
             <div className="container-fluid">
               <div className="animated fadeIn">
@@ -121,15 +134,18 @@ class UserDetail extends Component {
                     <Label sm={2}>Status</Label>
                     <Col sm={{ size: 10 }}>
                       <FormGroup check style={{ marginTop: "6px" }}>
-                        <Input type="checkbox" checked={status} value={status} onChange={(e) => this._onFieldChanged(e, 'status')} />{' '}Admin
+                        <Input type="checkbox" checked={status ? status : false} value={status || false} onChange={this.changeStatus} />{' '}Active
                       </FormGroup>
                     </Col>
                   </FormGroup>
                   <FormGroup row>
                     <Label sm={2}>Role</Label>
                     <Col sm={{ size: 10 }}>
-                      <FormGroup check style={{ marginTop: "6px" }}>
-                        <Input type="checkbox" checked={roles} value={roles} onChange={(e) => this._onFieldChanged(e, 'roles')} />{' '}Admin
+                      <FormGroup>
+                        <Input type="select" value={roles[0]||false} name="select" onChange={this.changeRole}>
+                          <option value="075c1072-92a2-4f99-ac11-bf985b13da6e">Admin</option>
+                          <option value="44a042b7-e016-4496-b5ec-4afb3d4517cf">User</option>
+                        </Input>
                       </FormGroup>
                     </Col>
                   </FormGroup>
@@ -153,7 +169,7 @@ const mapStateToProps = state => {
 };
 const mapActionToProps = dispatch => {
   return {
-    getUser: (params) => dispatch({ type: USER.USER_GET_USER, payload: params })
+    GetList: (params) => dispatch({ type: USER.USER_REQUEST, payload: params })
   };
 };
 export default connect(mapStateToProps, mapActionToProps)(UserDetail);

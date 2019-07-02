@@ -65,14 +65,14 @@ class User extends Component {
   DeleteUser = () => {
     let { idDelete } = this.state;
     userApi.RemoveUser(idDelete).then(response => {
-      this.props.GetList(PAGINATION);
       toast.success("Remove user success!");
+      this.props.GetList(PAGINATION);
       this.DeleteToggle();
     })
   }
 
   render() {
-    const { isOpen, currentIndex, modal, index } = this.state;
+    const { isOpen, currentIndex, modal } = this.state;
     let { listUser, totalPage } = this.props;
     const paginationSetting = {
       totalPage,
